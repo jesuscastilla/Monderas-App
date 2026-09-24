@@ -20,10 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 
+/** Credenciales para auto-login en un formulario web (input[name=usuario] / input[name=clave]). */
+data class AutoLogin(val usuario: String, val contrasena: String)
+
 /** Pantalla WebView reutilizable: carga una URL dentro de la app, con retroceso y spinner. */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
+fun WebViewScreen(url: String, autoLogin: AutoLogin? = null, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val webViewState = remember { mutableStateOf<WebView?>(null) }
     var cargando by remember { mutableStateOf(true) }
@@ -45,6 +48,9 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
                     webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView?, url: String?) {
                             cargando = false
+                            autoLogin?.let { creds ->
+                                view?.evaluateJavascript(buildAutoLoginJs(creds), null)
+                            }
                         }
 
                         override fun shouldOverrideUrlLoading(
@@ -54,7 +60,6 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
                             val destino = request?.url ?: return false
                             val scheme = destino.scheme.orEmpty()
                             val host = destino.host.orEmpty()
-                            // Enlaces externos (mailto o dominios ajenos) → navegador del sistema
                             if (scheme == "mailto" ||
                                 (scheme in listOf("http", "https") &&
                                     host.isNotEmpty() &&
@@ -77,3 +82,6 @@ fun WebViewScreen(url: String, modifier: Modifier = Modifier) {
         }
     }
 }
+
+private fun buildAutoLoginJs(creds: AutoLogin): String =
+    """(function(){var u=document.querySelector('input[name="usuario"]');var c=document.querySelector('input[name="clave"]');if(u&&c){u.value='${creds.usuario}';c.value='${creds.contrasena}';var f=document.querySelector('form');if(f){f.submit();}}})();"""

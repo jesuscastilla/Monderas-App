@@ -1,10 +1,9 @@
 package com.lebeche.monderas.app.ui.screens
 
 import androidx.compose.runtime.Composable
-import com.lebeche.monderas.app.ui.WebUrls
-import com.lebeche.monderas.app.ui.components.WebViewScreen
+import com.lebeche.monderas.app.calendario.ui.CalendarApp
 
 @Composable
 fun CalendarioScreen() {
-    WebViewScreen(url = WebUrls.CALENDARIO)
+    CalendarApp()
 }
