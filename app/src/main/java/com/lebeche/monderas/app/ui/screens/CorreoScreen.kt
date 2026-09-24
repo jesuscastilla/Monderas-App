@@ -1,11 +1,10 @@
 package com.lebeche.monderas.app.ui.screens
 
 import androidx.compose.runtime.Composable
+import com.lebeche.monderas.app.ui.WebUrls
+import com.lebeche.monderas.app.ui.components.WebViewScreen
 
 @Composable
 fun CorreoScreen() {
-    Placeholder(
-        titulo = "Correo",
-        descripcion = "Aquí se integrará el correo de la asociación.",
-    )
+    WebViewScreen(url = WebUrls.CORREO)
 }

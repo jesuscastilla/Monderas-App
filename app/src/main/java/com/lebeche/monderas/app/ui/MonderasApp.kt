@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -19,15 +19,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.lebeche.monderas.app.ui.screens.AdminScreen
 import com.lebeche.monderas.app.ui.screens.CalendarioScreen
 import com.lebeche.monderas.app.ui.screens.CorreoScreen
+import com.lebeche.monderas.app.ui.screens.WebScreen
 
 /** Pestañas principales de la app Monderas. */
 enum class MonderasTab(val etiqueta: String, val icono: ImageVector) {
     Calendario("Calendario", Icons.Filled.CalendarMonth),
     Correo("Correo", Icons.Filled.Email),
-    Admin("Admin", Icons.Filled.AdminPanelSettings),
+    Web("Web", Icons.Filled.Language),
 }
 
 @Composable
@@ -52,7 +52,7 @@ fun MonderasApp() {
             when (pestana) {
                 MonderasTab.Calendario -> CalendarioScreen()
                 MonderasTab.Correo -> CorreoScreen()
-                MonderasTab.Admin -> AdminScreen()
+                MonderasTab.Web -> WebScreen()
             }
         }
     }

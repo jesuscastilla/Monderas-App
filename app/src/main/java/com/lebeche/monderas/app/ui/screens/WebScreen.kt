@@ -5,6 +5,6 @@ import com.lebeche.monderas.app.ui.WebUrls
 import com.lebeche.monderas.app.ui.components.WebViewScreen
 
 @Composable
-fun CalendarioScreen() {
-    WebViewScreen(url = WebUrls.CALENDARIO)
+fun WebScreen() {
+    WebViewScreen(url = WebUrls.WEB)
 }
