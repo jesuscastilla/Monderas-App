@@ -7,11 +7,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,11 +34,22 @@ enum class MonderasTab(val etiqueta: String, val icono: ImageVector) {
     Web("Web", Icons.Filled.Language),
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MonderasApp() {
+fun MonderasApp(onLogout: () -> Unit) {
     var pestana by rememberSaveable { mutableStateOf(MonderasTab.Calendario) }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Monderas") },
+                actions = {
+                    IconButton(onClick = onLogout) {
+                        Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión")
+                    }
+                },
+            )
+        },
         bottomBar = {
             NavigationBar {
                 MonderasTab.entries.forEach { tab ->
