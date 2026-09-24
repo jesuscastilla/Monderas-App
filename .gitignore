@@ -1,0 +1,20 @@
+.gradle/
+build/
+local.properties
+keystore.properties
+signing.keystore
+*.iml
+.idea/
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+app/build/
+*.log
+
+# Certificados y claves de firma (Google Play, etc.)
+*.pem
+*.p12
+*.cer
+*.key
+*.jks
