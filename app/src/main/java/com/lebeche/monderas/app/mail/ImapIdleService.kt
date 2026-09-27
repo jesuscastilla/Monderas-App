@@ -85,7 +85,8 @@ class ImapIdleService : Service() {
                 } finally {
                     runCatching { s.close() }
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                android.util.Log.e("ImapIdle", "Error conexion IMAP", e)
                 // conexión caída: se reintenta
             } finally {
                 store = null

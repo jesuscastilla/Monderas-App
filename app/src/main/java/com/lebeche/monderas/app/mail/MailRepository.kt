@@ -32,7 +32,8 @@ object MailRepository {
         put("mail.store.protocol", "imaps")
         put("mail.imaps.host", MailConfig.IMAP_HOST)
         put("mail.imaps.port", MailConfig.IMAP_PORT.toString())
-        put("mail.imaps.ssl.enable", "true")
+        put("mail.imaps.ssl.trust", "*")
+        put("mail.imaps.ssl.checkserveridentity", "false")
         put("mail.imaps.connectiontimeout", "20000")
         put("mail.imaps.timeout", "20000")
     }
