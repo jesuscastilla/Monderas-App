@@ -1,51 +1,67 @@
 # Mondera's App
 
-Aplicación para las **Monderas** (las organizadoras de la asociación Lebeche). Permitirá, con un único usuario y contraseña, gestionar desde pestañas separadas:
+App Android **nativa** (Kotlin + Jetpack Compose) para la **organización de las Monderas**, las
+organizadoras del **Colectivo Lebeche**. Con un único usuario y contraseña, permite gestionar desde
+pestañas separadas:
 
-- **📅 Calendario** — crear/editar/borrar eventos en Synology Calendar (CalDAV).
-- **🌐 Web** — editar los contenidos de la web de Lebeche (`data/*.json`).
-- **✉️ Correo** — leer y responder el buzón `monderas@corrientelebeche.es` (solo en la app Android, no en la web).
-
-Todo con **sincronización bidireccional** y cada proyecto en su propia pestaña.
+- **📅 Calendario** — crear/editar/borrar eventos en Synology Calendar (CalDAV, bidireccional).
+- **✉️ Correo** — leer y responder el buzón `monderas@corrientelebeche.es` (IMAP IDLE push; solo en la app Android).
+- **🌐 Web** — acceder al panel STAFF de la web (WebView con auto-login).
 
 ---
 
 ## Estado
 
-**⏸️ Pausado (2026-09-23).** Todavía no hay código: este repositorio es el punto de partida donde se construirá el proyecto. Las apps actuales (Barrioteca y Calendario Lebeche) ya funcionan y se sincronizan, así que se decidió no hacer un cambio grande por ahora.
+**🚧 En desarrollo activo (2026-09-27).** La app **ya se está programando**: dispone de
+**login único** (cuenta compartida `monderas`), las **tres pestañas** (calendario, correo y web)
+funcionando, **firma de release** y **CI** que compila y publica el APK firmado en cada push.
+
+- **Último release:** `v1.0.1` (versionCode 3) → https://github.com/jesuscastilla/Monderas-App/releases
 
 ---
 
-## Qué será (resumen técnico)
+## Identidad
 
-| Pieza | Detalle |
+| Campo | Valor |
 |---|---|
-| **Backend** | `api/` en PHP, desplegado en `/volume1/web/monderas/api/` (el NAS solo usa PHP) |
-| **Web** | `web/` React + Vite + TS + Tailwind → `/volume1/web/monderas/` |
-| **Android** | Se amplía `calendario-lebeche` (rebautizada **Mondera's App**), manteniendo `applicationId com.lebeche.calendario` |
-| **Login** | usuario `monderas` (hash PBKDF2 en `api/config.php`, no versionado) |
+| **Package ID** | `com.lebeche.monderas.app` |
+| **Nombre** | Mondera's App |
+| **Plataforma** | Android nativo (Kotlin + Jetpack Compose + Material 3) |
+| **minSdk / target / compile** | 28 (Android 9+) / 36 / 36 |
+| **Firma** | keystore propio (alias `monderas`) |
+| **Colores** | Esquema LOGOS (azul Lebeche) |
 
 ---
 
-## Decisiones tomadas
+## Tecnología
 
-- **Calendario manda**: la web se genera como espejo desde CalDAV (`programacion-sync.php`).
-- **Online-only** (sin cola offline).
-- **Correo solo en la app Android** (Jakarta Mail: IMAP 993 + SMTP 587), no en la web.
-- **`applicationId` de Android mantenido** (misma ficha de Play y misma firma).
-- **SLiMS**: solo se toca README/docs, nunca código.
+| Componente | Tecnología |
+|---|---|
+| UI | Jetpack Compose + Material 3 |
+| Calendario | OkHttp 4 + biweekly (iCalendar) · CalDAV |
+| Correo | JavaMail (`com.sun.mail`, IMAP IDLE) |
+| Seguridad | Keystore de Android (AES/GCM) + SQLite propia |
+| CI/CD | GitHub Actions (`release.yml`) → APK firmado a GitHub Releases |
 
 ---
 
-## Próximo paso
+## Compilar
 
-Cuando se retome, el primer paso es **construir el backend PHP** (`api/`):
+```powershell
+cd g:\GITHUB\monderas
+$env:JAVA_HOME='C:\Program Files\Android\Android Studio\jbr'
+$env:ANDROID_HOME='C:\Users\jesus\AppData\Local\Android\Sdk'
+.\gradlew.bat :app:assembleDebug      # APK de desarrollo
+.\gradlew.bat :app:assembleRelease    # APK firmado
+.\gradlew.bat :app:bundleRelease      # AAB (Google Play)
+```
 
-- `auth.php` — login PBKDF2 + CSRF + token para Android.
-- `web.php` — lectura/escritura de `data/*.json` (con escritura atómica).
-- `calendario.php` — proxy CalDAV (PROPFIND / REPORT / PUT / DELETE).
-- `verificar.php` — diagnóstico (como `PWA/diagnostico.php`).
+Salidas: `app/build/outputs/apk/{debug,release}/`.
 
-Es la pieza común que necesitan tanto la web como el móvil.
+---
 
-> Antes de empezar, conviene revisar las "Decisiones tomadas" por si algo cambió desde el pause. Todo el contexto e infraestructura está en `G:\GITHUB\CONTEXT.md`.
+## Repositorio
+
+- **Local:** `G:\GITHUB\monderas\`
+- **GitHub:** https://github.com/jesuscastilla/Monderas-App
+- **Contexto global:** `G:\GITHUB\CONTEXT.md`
