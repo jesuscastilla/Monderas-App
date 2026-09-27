@@ -49,7 +49,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 - **📅 Calendario** (pestaña por defecto): CalDAV **bidireccional** (Synology Calendar), vista
   mensual + agenda, eventos recurrentes (RRULE), notificaciones/recordatorios y **exportación al
   calendario del sistema** (`CalendarContract`).
-- **✉️ Correo**: IMAP **IDLE** (push) + bandeja/lectura; servicio en primer plano `ImapIdleService`.
+- **✉️ Correo**: IMAP (bandeja/lectura); carga manual al abrir la pestaña (sin push en tiempo real).
 - **🌐 Web**: WebView al panel STAFF con auto-login por JS.
 
 ---
@@ -76,7 +76,6 @@ ui/
 mail/
   MailConfig.kt            # IMAP/SMTP host, puertos, buzón
   MailRepository.kt        # acceso IMAP
-  ImapIdleService.kt       # servicio en primer plano (push)
   MailNotifications.kt
 calendario/                # paquete AUTÓNOMO portado de la antigua "Calendario Lebeche"
   Repository.kt            # punto de acceso a datos + lógica de sync (push/pull)
@@ -89,11 +88,10 @@ calendario/                # paquete AUTÓNOMO portado de la antigua "Calendario
      EventEditScreen.kt, ReminderUi.kt, SettingsScreen.kt, WelcomeScreen.kt
 ```
 
-**Manifest** (`app/src/main/AndroidManifest.xml`): `MainActivity` (launcher), servicio
-`mail.ImapIdleService` (foregroundServiceType `dataSync`), receivers
+**Manifest** (`app/src/main/AndroidManifest.xml`): `MainActivity` (launcher), receivers
 `calendario.notif.NotificationPublisher` y `calendario.notif.BootReceiver`. Permisos: INTERNET,
 ACCESS_NETWORK_STATE, READ/WRITE_CALENDAR, POST_NOTIFICATIONS, RECEIVE_BOOT_COMPLETED,
-SCHEDULE_EXACT_ALARM, USE_EXACT_ALARM, FOREGROUND_SERVICE, FOREGROUND_SERVICE_DATA_SYNC.
+SCHEDULE_EXACT_ALARM, USE_EXACT_ALARM.
 
 ---
 
