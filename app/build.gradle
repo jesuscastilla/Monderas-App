@@ -18,7 +18,7 @@ android {
         applicationId 'com.lebeche.calendario'
         minSdk 28
         targetSdk 37
-        versionCode 16
+        versionCode 17
         versionName '3.0.0'
     }
 
@@ -45,8 +45,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
