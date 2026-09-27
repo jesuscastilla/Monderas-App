@@ -39,7 +39,7 @@ fun LoginScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Monderas", style = MaterialTheme.typography.headlineLarge)
+        Text("Mondera's App", style = MaterialTheme.typography.headlineLarge)
         Text(
             "Gestión interna de la asociación",
             style = MaterialTheme.typography.bodyMedium,
