@@ -8,11 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.lebeche.monderas.app.data.SessionManager
-import com.lebeche.monderas.app.mail.ImapIdleService
 import com.lebeche.monderas.app.ui.LoginScreen
 import com.lebeche.monderas.app.ui.MonderasApp
 import com.lebeche.monderas.app.ui.theme.MonderasTheme
@@ -30,14 +28,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MonderasTheme {
                 val loggedIn by SessionManager.isLoggedIn.collectAsState()
-
-                LaunchedEffect(loggedIn) {
-                    if (loggedIn) {
-                        ImapIdleService.start(this@MainActivity)
-                    } else {
-                        ImapIdleService.stop(this@MainActivity)
-                    }
-                }
 
                 if (loggedIn) {
                     MonderasApp(onLogout = { SessionManager.logout(this) })
