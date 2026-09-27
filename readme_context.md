@@ -37,7 +37,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 
 - Keystore propio **del calendario** (alias `calendario-lebeche`), para poder actualizar la ficha de Play.
 - `keystore.properties` y `signing.keystore` están en `.gitignore` (NO se versionan).
-- CI: `.github/workflows/release.yml` — en cada push a `main` compila `assembleRelease` firmado y
+- CI: `.github/workflows/release.yml` — en cada push a `main` compila `assembleRelease` + `bundleRelease` (APK + AAB) firmados y
   lo publica en GitHub Releases con secretos: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
 
 ---
