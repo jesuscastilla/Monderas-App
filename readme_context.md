@@ -23,9 +23,9 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 |---|---|
 | `applicationId` | `com.lebeche.calendario` (ficha de Play reutilizada) |
 | `namespace` | `com.lebeche.monderas.app` (paquetes fuente) |
-| `minSdk` / `targetSdk` / `compileSdk` | 28 / 36 / 36 |
+| `minSdk` / `targetSdk` / `compileSdk` | 28 / 37 / 37 |
 | `versionCode` / `versionName` | 16 / 3.0.0 |
-| AGP / Gradle | 9.4.1 / 9.7.1 |
+| AGP / Gradle | 9.4.1 / 9.8.0 (Java 17) |
 | Plugin Kotlin Compose | 2.2.10 |
 
 > ⚠️ **Gotcha:** `namespace` ≠ `applicationId` (a propósito). Los paquetes fuente son
@@ -71,7 +71,8 @@ ui/
   components/WebViewScreen.kt
   screens/CalendarioScreen.kt, CorreoScreen.kt, WebScreen.kt
   theme/Color.kt           # colores LOGOS (AzulTinte, AzulMadre, ...)
-  theme/Theme.kt           # MonderasTheme (light/dark)
+  theme/Theme.kt           # MonderasTheme (light/dark) + tipografía
+  theme/Type.kt           # MonderasTypography (Courgette/Garet/Open Sans)
 mail/
   MailConfig.kt            # IMAP/SMTP host, puertos, buzón
   MailRepository.kt        # acceso IMAP
@@ -134,7 +135,7 @@ Esquema azul Lebeche, ya aplicado en `ui/theme/Color.kt` y `ui/theme/Theme.kt`:
 | Ámbar (acento) | `#E8A33D` |
 | Papel / Tinta (neutros) | `#F5F5F0` / `#141414` |
 
-Tipografías (en `res/font/`): Courgette (display), Garet (títulos), Open Sans (cuerpo).
+Tipografías de marca aplicadas en `ui/theme/Type.kt` (`MonderasTypography`): Courgette (display/logo), Garet (titulares), Open Sans (cuerpo/etiquetas). Fuentes en `res/font/`.
 
 > No usar la paleta antigua marrón de Barrioteca (`PwaCream`, `PwaPrimary #8A5A00`, etc.).
 
@@ -142,10 +143,10 @@ Tipografías (en `res/font/`): Courgette (display), Garet (títulos), Open Sans 
 
 ## 9. Dependencias clave
 
-- Compose BOM `2024.12.01` + Material 3 + `material-icons-extended`.
-- Calendario: `okhttp:4.12.0`, `biweekly:0.6.8` (iCalendar), `work-runtime-ktx:2.10.0`,
-  `kotlinx-coroutines-android:1.9.0`.
-- Correo: `com.sun.mail:android-mail:1.6.7`, `com.sun.mail:android-activation:1.6.7`.
+- Compose BOM `2026.09.00` + Material 3 + `material-icons-extended`.
+- Calendario: `okhttp:5.5.0`, `biweekly:0.6.8` (iCalendar), `work-runtime-ktx:2.12.0`,
+  `kotlinx-coroutines-android:1.11.0`.
+- Correo: `com.sun.mail:android-mail:1.6.8`, `com.sun.mail:android-activation:1.6.8`.
 
 ---
 
@@ -176,4 +177,5 @@ Salidas: `app/build/outputs/apk/{debug,release}/` y `app/build/outputs/bundle/re
   No confundir `calendario/data/Crypto.kt` con `data/Crypto.kt` (son distintos).
 - El calendario es una pestaña (no una app aparte); el tema activo es `MonderasTheme` (LOGOS),
   no el antiguo `CalendarioLebecheTheme` (ya eliminado).
+- **Entorno**: compileSdk/targetSdk 37 + Gradle 9.8.0 → requiere **JDK 17** (`sourceCompatibility`/`targetCompatibility` en `app/build.gradle`).
 - Contexto global (infraestructura, credenciales, historia, otras apps): `G:\GITHUB\CONTEXT.md`.
