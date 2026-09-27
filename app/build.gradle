@@ -15,11 +15,11 @@ android {
     compileSdk 36
 
     defaultConfig {
-        applicationId 'com.lebeche.monderas.app'
+        applicationId 'com.lebeche.calendario'
         minSdk 28
         targetSdk 36
-        versionCode 3
-        versionName '1.0.1'
+        versionCode 16
+        versionName '3.0.0'
     }
 
     signingConfigs {
