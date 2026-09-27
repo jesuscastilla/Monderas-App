@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 
 /** Credenciales para auto-login en un formulario web (input[name=usuario] / input[name=clave]). */
@@ -26,7 +28,12 @@ data class AutoLogin(val usuario: String, val contrasena: String)
 /** Pantalla WebView reutilizable: carga una URL dentro de la app, con retroceso y spinner. */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebViewScreen(url: String, autoLogin: AutoLogin? = null, modifier: Modifier = Modifier) {
+fun WebViewScreen(
+    url: String, 
+    autoLogin: AutoLogin? = null, 
+    modifier: Modifier = Modifier,
+    floatingActionButton: @Composable (WebView?) -> Unit = {}
+) {
     val context = LocalContext.current
     val webViewState = remember { mutableStateOf<WebView?>(null) }
     var cargando by remember { mutableStateOf(true) }
@@ -79,6 +86,10 @@ fun WebViewScreen(url: String, autoLogin: AutoLogin? = null, modifier: Modifier 
 
         if (cargando) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+
+        Box(Modifier.align(Alignment.BottomEnd).padding(24.dp)) {
+            floatingActionButton(webViewState.value)
         }
     }
 }

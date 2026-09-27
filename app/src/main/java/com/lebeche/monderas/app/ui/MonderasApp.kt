@@ -40,16 +40,6 @@ fun MonderasApp(onLogout: () -> Unit) {
     var pestana by rememberSaveable { mutableStateOf(MonderasTab.Calendario) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Mondera's App") },
-                actions = {
-                    IconButton(onClick = onLogout) {
-                        Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Cerrar sesión")
-                    }
-                },
-            )
-        },
         bottomBar = {
             NavigationBar {
                 MonderasTab.entries.forEach { tab ->

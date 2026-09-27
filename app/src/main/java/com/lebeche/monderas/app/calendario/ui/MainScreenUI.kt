@@ -191,15 +191,16 @@ fun MainScreen(
 @Composable
 private fun MonthHeader(vm: MainViewModel) {
     Row(
-        Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { vm.prevMonth() }) { Icon(Icons.Filled.ChevronLeft, "Mes anterior") }
+        val monthText = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag("es-ES")).format(vm.month)
         Text(
-            DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag("es-ES")).format(vm.month),
+            monthText.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
             Modifier.weight(1f),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleLarge
         )
         IconButton(onClick = { vm.nextMonth() }) { Icon(Icons.Filled.ChevronRight, "Mes siguiente") }
     }
@@ -216,13 +217,13 @@ private fun MonthGrid(
     val byDay = occurrences.groupBy { occurrenceDate(it) }
 
     Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp)) {
             listOf("L", "M", "X", "J", "V", "S", "D").forEach { d ->
                 Text(
                     text = d,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -289,54 +290,58 @@ private fun DayCell(
 ) {
     Box(
         modifier
-            .clickable(enabled = date != null) { date?.let(onSelect) }
-            .border(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)),
+            .clickable(enabled = date != null) { date?.let(onSelect) },
         contentAlignment = Alignment.TopCenter
     ) {
         if (date != null) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 4.dp).fillMaxSize()
+                modifier = Modifier.padding(top = 8.dp).fillMaxSize()
             ) {
                 val isSel = date == selected
                 val isToday = date == LocalDate.now()
                 val bg = when {
                     isSel -> MaterialTheme.colorScheme.primary
-                    isToday -> MaterialTheme.colorScheme.primaryContainer
+                    isToday -> MaterialTheme.colorScheme.secondaryContainer
                     else -> Color.Transparent
                 }
                 val fg = when {
                     isSel -> MaterialTheme.colorScheme.onPrimary
-                    isToday -> MaterialTheme.colorScheme.onPrimaryContainer
+                    isToday -> MaterialTheme.colorScheme.onSecondaryContainer
                     else -> MaterialTheme.colorScheme.onSurface
                 }
                 Box(
-                    Modifier.size(28.dp).clip(CircleShape).background(bg),
+                    Modifier.size(32.dp).clip(CircleShape).background(bg),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(date.dayOfMonth.toString(), color = fg, style = MaterialTheme.typography.labelLarge)
                 }
                 
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(4.dp))
                 
                 if (events.isNotEmpty()) {
-                    Column(
-                        Modifier.fillMaxWidth().padding(horizontal = 2.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         events.take(3).forEach { e ->
                             val evColor = e.event.eventColor ?: colorMap[e.event.calendarId] ?: DefaultCalendarColor
                             Box(
-                                Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp))
+                                Modifier
+                                    .padding(horizontal = 1.5.dp)
+                                    .size(5.dp)
+                                    .clip(CircleShape)
                                     .background(Color(evColor))
                             )
                         }
                         if (events.size > 3) {
-                            Text(
-                                text = "·",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            Box(
+                                Modifier
+                                    .padding(horizontal = 1.5.dp)
+                                    .size(3.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.onSurfaceVariant)
                             )
                         }
                     }
@@ -356,12 +361,13 @@ private fun DayAgenda(
 ) {
     val dayOcc = occurrences.asSequence().filter { occurrenceDate(it) == selected }.sortedBy { it.startMillis }.toList()
     Column(modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        val dateString = DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es-ES")).format(selected)
         Text(
-            DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.forLanguageTag("es-ES")).format(selected),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary
+            dateString.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
         )
-        Spacer(Modifier.height(4.dp))
         if (dayOcc.isEmpty()) {
             Text(
                 "Sin eventos este día", Modifier.padding(vertical = 12.dp),
@@ -380,49 +386,50 @@ private fun DayAgenda(
 @Composable
 private fun EventRow(o: Occurrence, colorMap: Map<Long, Int>, onOpenEvent: (Long) -> Unit) {
     val eventColor = o.event.eventColor ?: colorMap[o.event.calendarId] ?: DefaultCalendarColor
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).clickable { onOpenEvent(o.event.id) },
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(eventColor).copy(alpha = 0.15f)
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp).clickable { onOpenEvent(o.event.id) },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
     ) {
         Row(Modifier.height(IntrinsicSize.Min)) {
             Box(
                 Modifier
-                    .width(4.dp)
+                    .width(6.dp)
                     .fillMaxHeight()
                     .background(Color(eventColor))
             )
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(o.event.title, style = MaterialTheme.typography.titleMedium, maxLines = 1, color = MaterialTheme.colorScheme.onSurface)
                     if (o.event.location.isNotBlank()) {
-                        Text(o.event.location, style = MaterialTheme.typography.bodySmall, maxLines = 1, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Spacer(Modifier.height(4.dp))
+                        Text(o.event.location, style = MaterialTheme.typography.bodyMedium, maxLines = 1, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (o.event.categories.isNotEmpty()) {
                         Row(
                             modifier = Modifier
-                                .padding(top = 6.dp)
+                                .padding(top = 8.dp)
                                 .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             o.event.categories.forEach { cat ->
                                 Surface(
-                                    shape = MaterialTheme.shapes.small,
-                                    color = Color(eventColor).copy(alpha = 0.3f)
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = MaterialTheme.colorScheme.secondaryContainer
                                 ) {
                                     Text(
                                         text = cat,
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                                         maxLines = 1
                                     )
                                 }
@@ -430,8 +437,8 @@ private fun EventRow(o: Occurrence, colorMap: Map<Long, Int>, onOpenEvent: (Long
                         }
                     }
                 }
-                Spacer(Modifier.width(8.dp))
-                Text(timeLabel(o), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Spacer(Modifier.width(12.dp))
+                Text(timeLabel(o), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
             }
         }
     }

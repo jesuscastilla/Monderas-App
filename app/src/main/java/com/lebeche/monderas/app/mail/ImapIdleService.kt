@@ -96,20 +96,29 @@ class ImapIdleService : Service() {
 
     private fun buildForegroundNotification(): Notification {
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (nm.getNotificationChannel(MailConfig.CHANNEL_ID) == null) {
-            nm.createNotificationChannel(
-                NotificationChannel(MailConfig.CHANNEL_ID, "Correo", NotificationManager.IMPORTANCE_LOW)
-            )
+        // Usamos un canal específico silencioso y minimizado para que no moleste en la barra
+        val channelId = "imap_idle_service_channel"
+        if (nm.getNotificationChannel(channelId) == null) {
+            val channel = NotificationChannel(
+                channelId,
+                "Sincronización de Correo",
+                NotificationManager.IMPORTANCE_MIN
+            ).apply {
+                setShowBadge(false)
+            }
+            nm.createNotificationChannel(channel)
         }
         val pi = PendingIntent.getActivity(
             this, 0, Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
-        return NotificationCompat.Builder(this, MailConfig.CHANNEL_ID)
+        return NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Correo conectado")
-            .setContentText("Recibiendo correo en tiempo real")
+            .setContentTitle("")
+            .setContentText("")
             .setContentIntent(pi)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setCategory(Notification.CATEGORY_SERVICE)
             .setOngoing(true)
             .build()
     }

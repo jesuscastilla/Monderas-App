@@ -40,6 +40,7 @@ fun MonderasTheme(
 ) {
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
+        typography = MonderasTypography,
         content = content,
     )
 }
