@@ -200,7 +200,7 @@ fun EventEditScreen(eventId: Long?, defaultDate: LocalDate? = null, onDone: () -
             Spacer(Modifier.height(12.dp))
 
             if (!allDay) {
-                ClickableField("Hora inicio", String.format(Locale.getDefault(), "%02d:%02d", startHour, startMinute)) {
+                ClickableField("Hora inicio", "%02d:%02d".format(startHour, startMinute)) {
                     showStartTimePicker = true
                 }
                 Spacer(Modifier.height(12.dp))
@@ -210,7 +210,7 @@ fun EventEditScreen(eventId: Long?, defaultDate: LocalDate? = null, onDone: () -
             Spacer(Modifier.height(12.dp))
 
             if (!allDay) {
-                ClickableField("Hora fin", String.format(Locale.getDefault(), "%02d:%02d", endHour, endMinute)) {
+                ClickableField("Hora fin", "%02d:%02d".format(endHour, endMinute)) {
                     showEndTimePicker = true
                 }
                 Spacer(Modifier.height(12.dp))

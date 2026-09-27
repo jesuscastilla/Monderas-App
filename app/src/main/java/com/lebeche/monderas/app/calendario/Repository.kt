@@ -1,5 +1,6 @@
 package com.lebeche.monderas.app.calendario
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.lebeche.monderas.app.calendario.cal.SystemCalendarSync
 import com.lebeche.monderas.app.calendario.caldav.CalDavClient
@@ -32,12 +33,11 @@ data class SaveEventResult(
 
 /** Punto de acceso a datos + lógica de sincronización para la interfaz. */
 class Repository private constructor(private val context: Context) {
-
     private val db = Db.get(context)
     private val caldav = CalDavClient()
     private val syncLock = Mutex()
 
-    @Suppress("StaticFieldLeak")
+    @SuppressLint("StaticFieldLeak")
     companion object {
         @Volatile
         private var instance: Repository? = null

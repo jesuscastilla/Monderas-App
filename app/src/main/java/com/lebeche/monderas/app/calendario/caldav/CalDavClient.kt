@@ -1,5 +1,6 @@
 package com.lebeche.monderas.app.calendario.caldav
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.lebeche.monderas.app.BuildConfig
 import com.lebeche.monderas.app.calendario.data.Account
@@ -336,7 +337,7 @@ class CalDavClient {
             .followSslRedirects(false)
             .addInterceptor(LoggingInterceptor)
         if (insecure) {
-            val trustAll = @Suppress("TrustAllX509TrustManager", "CustomX509TrustManager") object : X509TrustManager {
+            val trustAll = @SuppressLint("TrustAllX509TrustManager", "CustomX509TrustManager") object : X509TrustManager {
                 override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
                 // Insecure TLS context, explicitly allowing all client certificates
             }

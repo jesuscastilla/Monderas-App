@@ -1,5 +1,6 @@
 package com.lebeche.monderas.app.calendario.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -188,6 +189,7 @@ fun MainScreen(
     }
 }
 
+@SuppressLint("NonObservableLocale")
 @Composable
 private fun MonthHeader(vm: MainViewModel) {
     Row(
@@ -351,6 +353,7 @@ private fun DayCell(
     }
 }
 
+@SuppressLint("NonObservableLocale")
 @Composable
 private fun DayAgenda(
     modifier: Modifier,
