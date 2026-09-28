@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.lebeche.monderas.app.ui.screens.CalendarioScreen
 import com.lebeche.monderas.app.ui.screens.CorreoScreen
+import com.lebeche.monderas.app.ui.screens.DriveScreen
 import com.lebeche.monderas.app.ui.screens.WebScreen
 
 /** Pestañas principales de la app Monderas. */
@@ -32,6 +34,7 @@ enum class MonderasTab(val etiqueta: String, val icono: ImageVector) {
     Calendario("Calendario", Icons.Filled.CalendarMonth),
     Correo("Correo", Icons.Filled.Email),
     Web("Web", Icons.Filled.Language),
+    Drive("Drive", Icons.Filled.Cloud),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +61,7 @@ fun MonderasApp(onLogout: () -> Unit) {
                 MonderasTab.Calendario -> CalendarioScreen()
                 MonderasTab.Correo -> CorreoScreen()
                 MonderasTab.Web -> WebScreen()
+                MonderasTab.Drive -> DriveScreen()
             }
         }
     }

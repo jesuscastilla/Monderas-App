@@ -7,6 +7,12 @@ object WebUrls {
     /** Pestaña Correo: webmail Roundcube online. */
     const val ROUNDCUBE = "https://correo.corrientelebeche.es/"
 
-    /** Usuario del login de Roundcube (cuenta de correo compartida). */
-    const val ROUNDCUBE_USER = "monderas@corrientelebeche.es"
+    /** Usuario del login de Roundcube (Hostalia pide solo la parte local, sin @dominio). */
+    const val ROUNDCUBE_USER = "monderas"
+
+    /** Pestaña Drive: Synology Drive (DSM) del NAS. */
+    const val DRIVE = "https://pelotxo.synology.me:5001/"
+
+    /** Usuario de Synology para Drive. */
+    const val DRIVE_USER = "lebeche"
 }

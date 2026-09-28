@@ -60,6 +60,8 @@ fun WebViewScreen(
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
                     settings.useWideViewPort = true
+                    // UA móvil para que Roundcube/DSM sirvan el layout móvil (no el de escritorio).
+                    settings.userAgentString = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
 
                     webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView?, url: String?) {
@@ -106,7 +108,7 @@ fun WebViewScreen(
 private fun buildAutoLoginJs(creds: AutoLogin): String {
     val usuario = creds.usuario.jsEscape()
     val contrasena = creds.contrasena.jsEscape()
-    return """(function(){var u=document.querySelector('input[name="${creds.campoUsuario}"]');var c=document.querySelector('input[name="${creds.campoClave}"]');if(u&&c){u.value='$usuario';c.value='$contrasena';var f=document.querySelector('form');if(f){f.submit();}}})();"""
+    return """(function(){var u=document.querySelector('input[name="${creds.campoUsuario}"]');var c=document.querySelector('input[name="${creds.campoClave}"]');if(u&&c){u.value='$usuario';c.value='$contrasena';try{u.dispatchEvent(new Event('input',{bubbles:true}));c.dispatchEvent(new Event('input',{bubbles:true}));}catch(e){}var b=document.querySelector('button[type="submit"],input[type="submit"]');if(b){b.click();}else{var f=document.querySelector('form');if(f){f.submit();}}}})();"""
 }
 
 private fun String.jsEscape(): String =
