@@ -10,7 +10,7 @@ Si se necesita más infraestructura, credenciales o historia, está en `G:\GITHU
 
 App Android **nativa** (Kotlin + Jetpack Compose + Material 3) para la **organización de las
 Monderas** (las organizadoras del **Colectivo Lebeche**). Consolida en una sola app: calendario,
-correo y acceso a la web. Un único usuario y contraseña compartidos.
+correo, acceso a la web y archivos (Drive). Un único usuario y contraseña compartidos.
 
 **Reutiliza la ficha de Google Play** de la antigua app "Calendario Lebeche" (mismo `applicationId`
 y misma clave de firma), para actualizar la app existente en vez de crear una ficha nueva.
@@ -24,7 +24,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 | `applicationId` | `com.lebeche.calendario` (ficha de Play reutilizada) |
 | `namespace` | `com.lebeche.monderas.app` (paquetes fuente) |
 | `minSdk` / `targetSdk` / `compileSdk` | 28 / 37 / 37 |
-| `versionCode` / `versionName` | 19 / 3.0.0 |
+| `versionCode` / `versionName` | 20 / 3.0.0 |
 | AGP / Gradle | 9.4.1 / 9.8.0 (Java 17) |
 | Plugin Kotlin Compose | 2.2.10 |
 
@@ -51,6 +51,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
   calendario del sistema** (`CalendarContract`).
 - **✉️ Correo**: WebView a **Roundcube online** (`correo.corrientelebeche.es`) con auto-login.
 - **🌐 Web**: WebView al panel STAFF con auto-login por JS.
+- **☁️ Drive**: WebView a Synology Drive (DSM) con auto-login (usuario `lebeche`).
 
 ---
 
@@ -66,10 +67,10 @@ data/
   SessionManager.kt        # login/logout, contraseña cifrada, USUARIO="monderas", PASS_HASH
 ui/
   LoginScreen.kt           # pantalla de login
-  MonderasApp.kt           # Scaffold + TopAppBar + 3 pestañas (enum MonderasTab)
-  WebUrls.kt               # URLs: panel STAFF + webmail Roundcube
+  MonderasApp.kt           # Scaffold + 4 pestañas (enum MonderasTab)
+  WebUrls.kt               # URLs: panel STAFF + Roundcube + Synology Drive
   components/WebViewScreen.kt
-  screens/CalendarioScreen.kt, CorreoScreen.kt, WebScreen.kt
+  screens/CalendarioScreen.kt, CorreoScreen.kt, WebScreen.kt, DriveScreen.kt
   theme/Color.kt           # colores LOGOS (AzulTinte, AzulMadre, ...)
   theme/Theme.kt           # MonderasTheme (light/dark) + tipografía
   theme/Type.kt           # MonderasTypography (Courgette/Garet/Open Sans)
@@ -96,7 +97,8 @@ SCHEDULE_EXACT_ALARM, USE_EXACT_ALARM.
 | Servicio | Valor |
 |---|---|
 | **CalDAV** (Synology Calendar) | `https://pelotxo.synology.me:5001/caldav/` · usuario `lebeche` |
-| **Webmail** (Roundcube) | `https://correo.corrientelebeche.es/` · usuario `monderas@corrientelebeche.es` |
+| **Webmail** (Roundcube) | `https://correo.corrientelebeche.es/` · usuario `monderas` |
+| **Synology Drive** (DSM) | `https://pelotxo.synology.me:5001/` · usuario `lebeche` |
 | **Web STAFF** | `https://www.corrientelebeche.es/lebeche/admin/index.php` |
 
 Definidos en: `Repository.DEFAULT_CALDAV_URL`, `CalendarApp.CALDAV_USER`, `WebUrls`.
