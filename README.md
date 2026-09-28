@@ -7,16 +7,17 @@ pestañas separadas:
 - **📅 Calendario** — crear/editar/borrar eventos en Synology Calendar (CalDAV, bidireccional).
 - **✉️ Correo** — leer y responder el buzón `monderas@corrientelebeche.es` (IMAP IDLE push; solo en la app Android).
 - **🌐 Web** — acceder al panel STAFF de la web (WebView con auto-login).
+- **☁️ Drive** — acceder y organizar los archivos de la asociación alojados en el NAS.
 
 ---
 
 ## Estado
 
 **🚧 En desarrollo activo (2026-09-27).** La app **ya se está programando**: dispone de
-**login único** (cuenta compartida `monderas`), las **tres pestañas** (calendario, correo y web)
+**login único** (cuenta compartida `monderas`), las **cuatro pestañas** (calendario, correo, web y drive)
 funcionando, **firma de release** y **CI** que compila y publica el APK firmado en cada push.
 
-- **Último release:** `v3.0.0` (versionCode 16) → https://github.com/jesuscastilla/Monderas-App/releases
+- **Último release:** `v3.0.0` (versionCode 23) → https://github.com/jesuscastilla/Monderas-App/releases
 
 ---
 
@@ -27,7 +28,7 @@ funcionando, **firma de release** y **CI** que compila y publica el APK firmado 
 | **Package ID** | `com.lebeche.calendario` (reutiliza la ficha de Play) |
 | **Nombre** | Mondera's App |
 | **Plataforma** | Android nativo (Kotlin + Jetpack Compose + Material 3) |
-| **minSdk / target / compile** | 28 (Android 9+) / 36 / 36 |
+| **minSdk / target / compile** | 28 (Android 9+) / 37 / 37 |
 | **Firma** | misma clave del calendario (alias `calendario-lebeche`) |
 | **Colores** | Esquema LOGOS (azul Lebeche) |
 
