@@ -78,10 +78,11 @@ fun WebViewScreen(
                             val destino = request?.url ?: return false
                             val scheme = destino.scheme.orEmpty()
                             val host = destino.host.orEmpty()
+                            val interno = host.endsWith("corrientelebeche.es") || host.endsWith("synology.me")
                             if (scheme == "mailto" ||
                                 (scheme in listOf("http", "https") &&
                                     host.isNotEmpty() &&
-                                    !host.endsWith("corrientelebeche.es"))
+                                    !interno)
                             ) {
                                 context.startActivity(Intent(Intent.ACTION_VIEW, destino))
                                 return true
