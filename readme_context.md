@@ -171,4 +171,5 @@ Salidas: `app/build/outputs/apk/{debug,release}/` y `app/build/outputs/bundle/re
 - El calendario es una pestaña (no una app aparte); el tema activo es `MonderasTheme` (LOGOS),
   no el antiguo `CalendarioLebecheTheme` (ya eliminado).
 - **Entorno**: compileSdk/targetSdk 37 + Gradle 9.8.0 → requiere **JDK 17** (`sourceCompatibility`/`targetCompatibility` en `app/build.gradle`).
+- **Panel STAFF (pestaña Web)**: el botón "Guardar" de la app inyecta JS que pulsa `button.btn--guardar` del panel activo (`.admin__panel.activo .btn--guardar`). El código del panel está en `G:\GITHUB\LEBECHE\admin\` (`index.php`, `admin.js`, `guardar.php`). Los `alert()` JS se muestran como Toast vía `onJsAlert`.
 - Contexto global (infraestructura, credenciales, historia, otras apps): `G:\GITHUB\CONTEXT.md`.
