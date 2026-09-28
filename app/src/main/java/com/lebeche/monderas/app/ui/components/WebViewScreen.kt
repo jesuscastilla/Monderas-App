@@ -56,6 +56,9 @@ fun WebViewScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 WebView(ctx).apply {
+                    // Fix: pantalla negra en emuladores/GPU (fuerza renderizado por software del WebView).
+                    setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null)
+                    setBackgroundColor(android.graphics.Color.WHITE)
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.loadWithOverviewMode = true
