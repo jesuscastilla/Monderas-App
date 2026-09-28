@@ -24,7 +24,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 | `applicationId` | `com.lebeche.calendario` (ficha de Play reutilizada) |
 | `namespace` | `com.lebeche.monderas.app` (paquetes fuente) |
 | `minSdk` / `targetSdk` / `compileSdk` | 28 / 37 / 37 |
-| `versionCode` / `versionName` | 16 / 3.0.0 |
+| `versionCode` / `versionName` | 19 / 3.0.0 |
 | AGP / Gradle | 9.4.1 / 9.8.0 (Java 17) |
 | Plugin Kotlin Compose | 2.2.10 |
 
@@ -49,7 +49,7 @@ y misma clave de firma), para actualizar la app existente en vez de crear una fi
 - **📅 Calendario** (pestaña por defecto): CalDAV **bidireccional** (Synology Calendar), vista
   mensual + agenda, eventos recurrentes (RRULE), notificaciones/recordatorios y **exportación al
   calendario del sistema** (`CalendarContract`).
-- **✉️ Correo**: IMAP (bandeja/lectura); carga manual al abrir la pestaña (sin push en tiempo real).
+- **✉️ Correo**: WebView a **Roundcube online** (`correo.corrientelebeche.es`) con auto-login.
 - **🌐 Web**: WebView al panel STAFF con auto-login por JS.
 
 ---
@@ -60,23 +60,19 @@ Raíz: `app/src/main/java/com/lebeche/monderas/app/`
 
 ```
 App.kt                     # Application: crea canales de notificación, programa sync
-MainActivity.kt            # gate login/logout + permisos + arranca/para ImapIdleService
+MainActivity.kt            # gate login/logout + permisos
 data/
   Crypto.kt                # cifrado AES/GCM con Android Keystore (alias "monderas_master")
   SessionManager.kt        # login/logout, contraseña cifrada, USUARIO="monderas", PASS_HASH
 ui/
   LoginScreen.kt           # pantalla de login
   MonderasApp.kt           # Scaffold + TopAppBar + 3 pestañas (enum MonderasTab)
-  WebUrls.kt               # URL del panel STAFF
+  WebUrls.kt               # URLs: panel STAFF + webmail Roundcube
   components/WebViewScreen.kt
   screens/CalendarioScreen.kt, CorreoScreen.kt, WebScreen.kt
   theme/Color.kt           # colores LOGOS (AzulTinte, AzulMadre, ...)
   theme/Theme.kt           # MonderasTheme (light/dark) + tipografía
   theme/Type.kt           # MonderasTypography (Courgette/Garet/Open Sans)
-mail/
-  MailConfig.kt            # IMAP/SMTP host, puertos, buzón
-  MailRepository.kt        # acceso IMAP
-  MailNotifications.kt
 calendario/                # paquete AUTÓNOMO portado de la antigua "Calendario Lebeche"
   Repository.kt            # punto de acceso a datos + lógica de sync (push/pull)
   cal/SystemCalendarSync.kt
@@ -100,12 +96,10 @@ SCHEDULE_EXACT_ALARM, USE_EXACT_ALARM.
 | Servicio | Valor |
 |---|---|
 | **CalDAV** (Synology Calendar) | `https://pelotxo.synology.me:5001/caldav/` · usuario `lebeche` |
-| **IMAP** (correo) | `imap.dominioabsoluto.net:993` |
-| **SMTP** (correo) | `smtp.dominioabsoluto.net:587` |
-| **Buzón** | `monderas@corrientelebeche.es` |
+| **Webmail** (Roundcube) | `https://correo.corrientelebeche.es/` · usuario `monderas@corrientelebeche.es` |
 | **Web STAFF** | `https://www.corrientelebeche.es/lebeche/admin/index.php` |
 
-Definidos en: `Repository.DEFAULT_CALDAV_URL`, `CalendarApp.CALDAV_USER`, `MailConfig`, `WebUrls`.
+Definidos en: `Repository.DEFAULT_CALDAV_URL`, `CalendarApp.CALDAV_USER`, `WebUrls`.
 
 ---
 
@@ -144,7 +138,6 @@ Tipografías de marca aplicadas en `ui/theme/Type.kt` (`MonderasTypography`): Co
 - Compose BOM `2026.09.00` + Material 3 + `material-icons-extended`.
 - Calendario: `okhttp:5.5.0`, `biweekly:0.6.8` (iCalendar), `work-runtime-ktx:2.12.0`,
   `kotlinx-coroutines-android:1.11.0`.
-- Correo: `com.sun.mail:android-mail:1.6.8`, `com.sun.mail:android-activation:1.6.8`.
 
 ---
 
@@ -170,7 +163,7 @@ Salidas: `app/build/outputs/apk/{debug,release}/` y `app/build/outputs/bundle/re
 - **Nombre mostrado** "Mondera's App" viene de `res/values/strings.xml` (`app_name`), con el
   apóstrofo escapado como `\'` (obligatorio en XML).
 - **Release usa R8/minify**: las reglas necesarias ya están en `app/proguard-rules.pro` (biweekly,
-  OkHttp, JavaMail). Si añades librerías con reflexión, añade sus reglas.
+  OkHttp). Si añades librerías con reflexión, añade sus reglas.
 - **Calendario**: es un paquete portado autónomo con su propia SQLite (`calendario/data/Db.kt`).
   No confundir `calendario/data/Crypto.kt` con `data/Crypto.kt` (son distintos).
 - El calendario es una pestaña (no una app aparte); el tema activo es `MonderasTheme` (LOGOS),
