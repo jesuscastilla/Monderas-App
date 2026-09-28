@@ -172,4 +172,5 @@ Salidas: `app/build/outputs/apk/{debug,release}/` y `app/build/outputs/bundle/re
   no el antiguo `CalendarioLebecheTheme` (ya eliminado).
 - **Entorno**: compileSdk/targetSdk 37 + Gradle 9.8.0 → requiere **JDK 17** (`sourceCompatibility`/`targetCompatibility` en `app/build.gradle`).
 - **Panel STAFF (pestaña Web)**: el botón "Guardar" de la app inyecta JS que pulsa `button.btn--guardar` del panel activo (`.admin__panel.activo .btn--guardar`). El código del panel está en `G:\GITHUB\LEBECHE\admin\` (`index.php`, `admin.js`, `guardar.php`). Los `alert()` JS se muestran como Toast vía `onJsAlert`.
+- **WebView (hosts internos)**: `WebViewScreen` mantiene dentro de la app solo los hosts que terminan en `corrientelebeche.es` o `synology.me` (el NAS `pelotxo.synology.me`). Cualquier otro host externo se abre en el navegador.
 - Contexto global (infraestructura, credenciales, historia, otras apps): `G:\GITHUB\CONTEXT.md`.
