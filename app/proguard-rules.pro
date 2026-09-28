@@ -13,11 +13,5 @@
 # biweekly: módulo JSON opcional (Jackson no incluido)
 -dontwarn com.fasterxml.jackson.**
 
-# Correo: JavaMail (IMAP IDLE)
--keep class javax.mail.** { *; }
--keep class com.sun.mail.** { *; }
--dontwarn javax.mail.**
--dontwarn com.sun.mail.**
-
 # Mantener atributos para bibliotecas con reflexión
 -keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*

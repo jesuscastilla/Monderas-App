@@ -22,8 +22,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 
-/** Credenciales para auto-login en un formulario web (input[name=usuario] / input[name=clave]). */
-data class AutoLogin(val usuario: String, val contrasena: String)
+/**
+ * Credenciales para auto-login en un formulario web.
+ * Campos por defecto: input[name=usuario] / input[name=clave] (panel STAFF).
+ * Roundcube usa input[name=_user] / input[name=_pass], así que se pueden sobrescribir.
+ */
+data class AutoLogin(
+    val usuario: String,
+    val contrasena: String,
+    val campoUsuario: String = "usuario",
+    val campoClave: String = "clave",
+)
 
 /** Pantalla WebView reutilizable: carga una URL dentro de la app, con retroceso y spinner. */
 @SuppressLint("SetJavaScriptEnabled")
@@ -94,5 +103,11 @@ fun WebViewScreen(
     }
 }
 
-private fun buildAutoLoginJs(creds: AutoLogin): String =
-    """(function(){var u=document.querySelector('input[name="usuario"]');var c=document.querySelector('input[name="clave"]');if(u&&c){u.value='${creds.usuario}';c.value='${creds.contrasena}';var f=document.querySelector('form');if(f){f.submit();}}})();"""
+private fun buildAutoLoginJs(creds: AutoLogin): String {
+    val usuario = creds.usuario.jsEscape()
+    val contrasena = creds.contrasena.jsEscape()
+    return """(function(){var u=document.querySelector('input[name="${creds.campoUsuario}"]');var c=document.querySelector('input[name="${creds.campoClave}"]');if(u&&c){u.value='$usuario';c.value='$contrasena';var f=document.querySelector('form');if(f){f.submit();}}})();"""
+}
+
+private fun String.jsEscape(): String =
+    replace("\\", "\\\\").replace("'", "\\'")
