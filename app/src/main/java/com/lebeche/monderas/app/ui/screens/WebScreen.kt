@@ -38,9 +38,10 @@ fun WebScreen() {
                 ExtendedFloatingActionButton(
                     onClick = {
                         val js = "(function() { " +
-                                "var btn = document.querySelector('input[type=\"submit\"], button[type=\"submit\"], .saveButton, #saveButton'); " +
-                                "if (btn) btn.click(); " +
-                                "else alert('No se ha encontrado el botón de guardar en esta pantalla.'); " +
+                                "var panel = document.querySelector('.admin__panel.activo'); " +
+                                "var btn = panel ? panel.querySelector('.btn--guardar') : document.querySelector('.btn--guardar'); " +
+                                "if (btn) { btn.click(); } " +
+                                "else { alert('No se ha encontrado el botón de guardar en esta pantalla.'); } " +
                                 "})();"
                         webView?.evaluateJavascript(js, null)
                     },

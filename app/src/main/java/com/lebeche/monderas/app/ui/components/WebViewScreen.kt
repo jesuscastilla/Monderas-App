@@ -89,7 +89,15 @@ fun WebViewScreen(
                             return false
                         }
                     }
-                    webChromeClient = WebChromeClient()
+                    webChromeClient = object : WebChromeClient() {
+                        override fun onJsAlert(view: WebView?, url: String?, message: String?, result: android.webkit.JsResult?): Boolean {
+                            if (message != null) {
+                                android.widget.Toast.makeText(ctx, message, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                            result?.confirm()
+                            return true
+                        }
+                    }
                     loadUrl(url)
                 }.also { webViewState.value = it }
             },
