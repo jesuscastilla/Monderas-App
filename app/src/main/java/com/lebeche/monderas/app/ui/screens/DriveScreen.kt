@@ -27,6 +27,7 @@ fun DriveScreen() {
         WebViewScreen(
             modifier = Modifier.fillMaxSize().padding(padding),
             url = WebUrls.DRIVE,
+            userAgent = WebUrls.DRIVE_UA,
             autoLogin = AutoLogin(
                 usuario = WebUrls.DRIVE_USER,
                 contrasena = contrasena,
