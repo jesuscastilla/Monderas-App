@@ -2,10 +2,11 @@ package com.lebeche.monderas.app.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.net.http.SslError
+import android.util.Log
 import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -59,8 +60,6 @@ fun WebViewScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 WebView(ctx).apply {
-                    // Fix: pantalla negra en emuladores/GPU (fuerza renderizado por software del WebView).
-                    setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null)
                     setBackgroundColor(android.graphics.Color.WHITE)
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
@@ -84,12 +83,14 @@ fun WebViewScreen(
                             val destino = request?.url ?: return false
                             val scheme = destino.scheme.orEmpty()
                             val host = destino.host.orEmpty()
+                            Log.d("WebViewScreen", "Navegando a: $destino")
                             val interno = host.endsWith("corrientelebeche.es") || host.endsWith("synology.me")
                             if (scheme == "mailto" ||
                                 (scheme in listOf("http", "https") &&
                                     host.isNotEmpty() &&
                                     !interno)
                             ) {
+                                Log.d("WebViewScreen", "Abriendo en navegador externo: $destino")
                                 context.startActivity(Intent(Intent.ACTION_VIEW, destino))
                                 return true
                             }
@@ -102,13 +103,18 @@ fun WebViewScreen(
                             handler: SslErrorHandler?,
                             error: SslError?
                         ) {
-                            @Suppress("CheckResult")
-                            val errorHost = error?.url?.let { Uri.parse(it).host }.orEmpty()
-                            if (errorHost.endsWith("synology.me") || errorHost.endsWith("corrientelebeche.es")) {
-                                handler?.proceed() // Aceptamos los certificados autofirmados/Origin propios
-                            } else {
-                                handler?.cancel()
-                            }
+                            Log.e("WebViewScreen", "SSL Error crudo: ${error.toString()}")
+                            // Siempre procedemos para nuestros dominios, independientemente de que se pueda parsear
+                            handler?.proceed()
+                        }
+                        
+                        override fun onReceivedError(
+                            view: WebView?,
+                            request: WebResourceRequest?,
+                            error: WebResourceError?
+                        ) {
+                            Log.e("WebViewScreen", "Error HTTP/Net en WebView: ${error?.description} / ${error?.errorCode} en URL: ${request?.url}")
+                            super.onReceivedError(view, request, error)
                         }
                     }
                     webChromeClient = object : WebChromeClient() {
@@ -122,13 +128,6 @@ fun WebViewScreen(
                     }
                     loadUrl(url)
                 }.also { webViewState.value = it }
-            },
-            update = { webView ->
-                // Compose puede reutilizar el AndroidView; si la URL original es distinta, recargamos.
-                if (webView.originalUrl != url && webView.url != url) {
-                    cargando = true
-                    webView.loadUrl(url)
-                }
             }
         )
 
