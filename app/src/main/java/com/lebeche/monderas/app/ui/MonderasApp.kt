@@ -56,7 +56,7 @@ fun MonderasApp(onLogout: () -> Unit) {
             }
         },
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Box(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
             when (pestana) {
                 MonderasTab.Calendario -> CalendarioScreen()
                 MonderasTab.Correo -> CorreoScreen()

@@ -2,6 +2,9 @@ package com.lebeche.monderas.app.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
+import android.net.http.SslError
+import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -92,6 +95,21 @@ fun WebViewScreen(
                             }
                             return false
                         }
+
+                        @SuppressLint("WebViewClientOnReceivedSslError")
+                        override fun onReceivedSslError(
+                            view: WebView?,
+                            handler: SslErrorHandler?,
+                            error: SslError?
+                        ) {
+                            @Suppress("CheckResult")
+                            val errorHost = error?.url?.let { Uri.parse(it).host }.orEmpty()
+                            if (errorHost.endsWith("synology.me") || errorHost.endsWith("corrientelebeche.es")) {
+                                handler?.proceed() // Aceptamos los certificados autofirmados/Origin propios
+                            } else {
+                                handler?.cancel()
+                            }
+                        }
                     }
                     webChromeClient = object : WebChromeClient() {
                         override fun onJsAlert(view: WebView?, url: String?, message: String?, result: android.webkit.JsResult?): Boolean {
@@ -105,6 +123,13 @@ fun WebViewScreen(
                     loadUrl(url)
                 }.also { webViewState.value = it }
             },
+            update = { webView ->
+                // Compose puede reutilizar el AndroidView; si la URL original es distinta, recargamos.
+                if (webView.originalUrl != url && webView.url != url) {
+                    cargando = true
+                    webView.loadUrl(url)
+                }
+            }
         )
 
         if (cargando) {
