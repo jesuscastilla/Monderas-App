@@ -81,10 +81,7 @@ fun WebViewScreen(
 
     // Aceptar cookies (Cloudflare y tokens de DSM/Roundcube las necesitan).
     remember {
-        CookieManager.getInstance().apply {
-            setAcceptCookie(true)
-            setAcceptThirdPartyCookies(null, true)
-        }
+        CookieManager.getInstance().setAcceptCookie(true)
     }
 
     BackHandler(enabled = webViewState.value?.canGoBack() == true) {

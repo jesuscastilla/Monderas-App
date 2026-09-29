@@ -10,8 +10,8 @@ object WebUrls {
     /** Usuario del login de Roundcube (Hostalia pide solo la parte local, sin @dominio). */
     const val ROUNDCUBE_USER = "monderas"
 
-    /** Pestaña Drive: Synology Drive (DSM) del NAS. */
-    const val DRIVE = "https://pelotxo.synology.me:5001/"
+    /** Pestaña Drive: abre directamente la app Synology Drive del DSM (cuenta lebeche). */
+    const val DRIVE = "https://pelotxo.synology.me:5001/?launchApp=SYNO.SDS.Drive.Application"
 
     /**
      * UA de ESCRITORIO para Drive. DSM detecta cualquier UA con "Android"/"Mobile" y sirve la
