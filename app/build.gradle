@@ -18,8 +18,8 @@ android {
         applicationId 'com.lebeche.calendario'
         minSdk 28
         targetSdk 37
-        versionCode 24
-        versionName '3.0.1'
+        versionCode 25
+        versionName '3.0.2'
     }
 
     signingConfigs {

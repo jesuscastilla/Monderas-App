@@ -67,6 +67,7 @@ data class AutoLogin(
 fun WebViewScreen(
     url: String,
     autoLogin: AutoLogin? = null,
+    scriptAutoLogin: String? = null,
     modifier: Modifier = Modifier,
     userAgent: String? = null,
     floatingActionButton: @Composable (WebView?) -> Unit = {}
@@ -100,6 +101,7 @@ fun WebViewScreen(
                         }
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
+                        settings.setSupportMultipleWindows(true)
                         settings.loadWithOverviewMode = true
                         settings.useWideViewPort = true
                         settings.builtInZoomControls = true
@@ -115,6 +117,14 @@ fun WebViewScreen(
                                     if (!yaIntentadas.contains(u)) {
                                         yaIntentadas.add(u)
                                         view?.evaluateJavascript(buildAutoLoginJs(creds), null)
+                                    }
+                                }
+                                // Auto-login por script (p. ej. API de Synology): una sola vez por URL.
+                                scriptAutoLogin?.let { script ->
+                                    val u = url.orEmpty()
+                                    if (!yaIntentadas.contains(u)) {
+                                        yaIntentadas.add(u)
+                                        view?.evaluateJavascript(script, null)
                                     }
                                 }
                                 // Watchdog: si el body quedó vacío, lo convertimos en error visible.
@@ -199,6 +209,21 @@ fun WebViewScreen(
                             }
                         }
                         webChromeClient = object : WebChromeClient() {
+                            override fun onCreateWindow(
+                                view: WebView?,
+                                isDialog: Boolean,
+                                isUserGesture: Boolean,
+                                resultMsg: android.os.Message?
+                            ): Boolean {
+                                // window.open / target=_blank: abrir en la misma WebView (DSM lanza apps en ventana nueva).
+                                resultMsg?.let { msg ->
+                                    (msg.obj as? android.webkit.WebView.WebViewTransport)?.webView = view
+                                    msg.sendToTarget()
+                                    return true
+                                }
+                                return false
+                            }
+
                             override fun onJsAlert(view: WebView?, url: String?, message: String?, result: android.webkit.JsResult?): Boolean {
                                 if (message != null) {
                                     android.widget.Toast.makeText(ctx, message, android.widget.Toast.LENGTH_SHORT).show()
@@ -267,6 +292,14 @@ private fun buildAutoLoginJs(creds: AutoLogin): String {
     val usuario = creds.usuario.jsEscape()
     val contrasena = creds.contrasena.jsEscape()
     return """(function(){var u=document.querySelector('input[name="${creds.campoUsuario}"]');var c=document.querySelector('input[name="${creds.campoClave}"]');if(u&&c){u.value='$usuario';c.value='$contrasena';try{u.dispatchEvent(new Event('input',{bubbles:true}));c.dispatchEvent(new Event('input',{bubbles:true}));}catch(e){}var b=document.querySelector('button[type="submit"],input[type="submit"]');if(b){b.click();}else{var f=document.querySelector('form');if(f){f.submit();}}}})();"""
+}
+
+/** Script de auto-login para Synology DSM: usa la API SYNO.API.Auth en vez de rellenar el formulario. */
+fun buildSynologyLoginJs(account: String, password: String, launchUrl: String): String {
+    val usr = account.jsEscape()
+    val pwd = password.jsEscape()
+    val dst = launchUrl.jsEscape()
+    return """(function(){if(!document.querySelector('input[name="username"]')){return;}try{var u=encodeURIComponent('$usr');var p=encodeURIComponent('$pwd');fetch('/webapi/entry.cgi?api=SYNO.API.Auth&version=6&method=login&account='+u+'&passwd='+p+'&session=webui&format=cookie',{credentials:'include'}).then(function(r){return r.json();}).then(function(j){if(j&&j.success){try{if(j.data&&j.data.sid){document.cookie='id='+j.data.sid+'; path=/';}}catch(e){}location.replace('$dst');}}).catch(function(){});}catch(e){}})();"""
 }
 
 private fun String.jsEscape(): String =

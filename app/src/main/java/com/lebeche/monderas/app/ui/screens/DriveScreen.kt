@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.lebeche.monderas.app.data.SessionManager
 import com.lebeche.monderas.app.ui.WebUrls
-import com.lebeche.monderas.app.ui.components.AutoLogin
 import com.lebeche.monderas.app.ui.components.WebViewScreen
+import com.lebeche.monderas.app.ui.components.buildSynologyLoginJs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,11 +28,10 @@ fun DriveScreen() {
             modifier = Modifier.fillMaxSize().padding(padding),
             url = WebUrls.DRIVE,
             userAgent = WebUrls.DRIVE_UA,
-            autoLogin = AutoLogin(
-                usuario = WebUrls.DRIVE_USER,
-                contrasena = contrasena,
-                campoUsuario = "username",
-                campoClave = "password",
+            scriptAutoLogin = buildSynologyLoginJs(
+                account = WebUrls.DRIVE_USER,
+                password = contrasena,
+                launchUrl = WebUrls.DRIVE,
             ),
         )
     }
