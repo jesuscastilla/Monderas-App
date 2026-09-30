@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -82,7 +83,7 @@ fun WebViewScreen(
     val yaIntentadas = remember { mutableSetOf<String>() }
 
     // Aceptar cookies (Cloudflare y tokens de DSM/Roundcube las necesitan).
-    remember {
+    LaunchedEffect(Unit) {
         CookieManager.getInstance().setAcceptCookie(true)
     }
 

@@ -1,5 +1,6 @@
 package com.lebeche.monderas.app.drive
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import com.lebeche.monderas.app.ui.WebUrls
@@ -30,7 +31,7 @@ class DriveRepository {
 
     // Aceptamos certificados autofirmados para el NAS.
     private val trustAllCerts = arrayOf<TrustManager>(
-        @Suppress("CustomX509TrustManager")
+        @SuppressLint("TrustAllX509TrustManager", "CustomX509TrustManager")
         object : X509TrustManager {
             override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
             override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
