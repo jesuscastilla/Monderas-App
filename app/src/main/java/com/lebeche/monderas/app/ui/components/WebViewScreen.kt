@@ -44,10 +44,11 @@ private const val UA_MOVIL =
     "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
 
 /**
- * Si el WebView renderiza un rectángulo negro/blanco (bug de GPU, típico en emuladores),
- * ponlo a true para forzar renderizado por software.
+ * El WebView de DSM/Roundcube se muestra como un rectángulo negro/blanco en algunos
+ * dispositivos (bug de GPU/composición con hardware acceleration + Compose). Forzar
+ * renderizado por software evita ese rectángulo y garantiza que el contenido se dibuje.
  */
-private const val RENDERIZADO_SOFTWARE = false
+private const val RENDERIZADO_SOFTWARE = true
 
 /**
  * Credenciales para auto-login en un formulario web.
