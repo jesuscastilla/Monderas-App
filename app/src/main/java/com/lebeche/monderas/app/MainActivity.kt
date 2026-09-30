@@ -8,8 +8,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
 import com.lebeche.monderas.app.data.SessionManager
 import com.lebeche.monderas.app.ui.LoginScreen
 import com.lebeche.monderas.app.ui.MonderasApp
@@ -27,12 +31,17 @@ class MainActivity : ComponentActivity() {
         requestInitialPermissions()
         setContent {
             MonderasTheme {
-                val loggedIn by SessionManager.isLoggedIn.collectAsState()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val loggedIn by SessionManager.isLoggedIn.collectAsState()
 
-                if (loggedIn) {
-                    MonderasApp(onLogout = { SessionManager.logout(this) })
-                } else {
-                    LoginScreen()
+                    if (loggedIn) {
+                        MonderasApp(onLogout = { SessionManager.logout(this) })
+                    } else {
+                        LoginScreen()
+                    }
                 }
             }
         }
