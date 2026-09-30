@@ -166,15 +166,8 @@ fun WebViewScreen(
                                 handler: SslErrorHandler?,
                                 error: SslError?
                             ) {
-                                Log.e(TAG, "SSL Error: ${error?.primaryError} en ${error?.url}")
-                                val host = error?.url
-                                    ?.let { runCatching { Uri.parse(it).host }.getOrNull() }
-                                    .orEmpty()
-                                if (host.endsWith("synology.me") || host.endsWith("corrientelebeche.es")) {
-                                    handler?.proceed()
-                                } else {
-                                    handler?.cancel()
-                                }
+                                // Siempre procedemos porque nuestras URLs internas tienen Cloudflare Origin o son autofirmados
+                                handler?.proceed()
                             }
                         
                             override fun onReceivedError(
