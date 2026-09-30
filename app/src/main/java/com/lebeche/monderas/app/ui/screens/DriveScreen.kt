@@ -46,7 +46,7 @@ fun DriveScreen() {
     var cargando by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var items by remember { mutableStateOf<List<DriveItem>>(emptyList()) }
-    val pathStack = remember { mutableStateListOf<String>("") } // "" es la raíz
+    val pathStack = remember { mutableStateListOf<String>("/home") } // "/home" es la raíz por defecto para la cuenta
 
     LaunchedEffect(pathStack.size) {
         val path = pathStack.last()
