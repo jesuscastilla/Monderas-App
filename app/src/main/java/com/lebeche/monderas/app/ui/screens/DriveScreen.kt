@@ -177,7 +177,8 @@ fun DriveScreen() {
                                             scope.launch {
                                                 accionEnProgreso = true
                                                 val intent = Intent(Intent.ACTION_VIEW)
-                                                intent.data = Uri.parse("https://pelotxo.synology.me:5001/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${Uri.encode(item.path)}")
+                                                // Synology File Station usa _sid (o sid) por querystring para autorizar peticiones directas sin cookies.
+                                                intent.data = Uri.parse("https://pelotxo.synology.me:5001/webapi/entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${Uri.encode(item.path)}&_sid=${repo.sid}")
                                                 try {
                                                     context.startActivity(intent)
                                                 } catch (_: Exception) {

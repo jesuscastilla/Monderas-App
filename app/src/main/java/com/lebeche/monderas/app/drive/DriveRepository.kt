@@ -61,7 +61,9 @@ class DriveRepository {
         .cookieJar(cookieJar)
         .build()
 
-    private var sid: String? = null
+    var sid: String? = null
+        private set
+        
     private val baseUrl = "https://pelotxo.synology.me:5001/webapi/"
 
     suspend fun login(password: String): Boolean = withContext(Dispatchers.IO) {
