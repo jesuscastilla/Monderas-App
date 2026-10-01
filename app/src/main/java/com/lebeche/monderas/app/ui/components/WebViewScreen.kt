@@ -177,7 +177,8 @@ fun WebViewScreen(
                                 webError: WebResourceError?
                             ) {
                                 Log.e(TAG, "Error HTTP/Net: ${webError?.description} / ${webError?.errorCode} en ${request?.url}")
-                                if (request?.isForMainFrame == true) {
+                                // Evitamos fallos visuales por el ERR_QUIC_PROTOCOL_ERROR que a veces da Chromium por defecto
+                                if (request?.isForMainFrame == true && webError?.errorCode != ERROR_UNKNOWN) {
                                     error = "No se pudo cargar la página (error de red ${webError?.errorCode})."
                                     cargando = false
                                 }
