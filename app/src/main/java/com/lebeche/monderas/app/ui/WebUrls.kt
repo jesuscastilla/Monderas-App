@@ -7,8 +7,8 @@ object WebUrls {
     /** Pestaña Correo: webmail Roundcube online. */
     const val ROUNDCUBE = "https://correo.corrientelebeche.es/"
 
-    /** Usuario del login de Roundcube (Hostalia pide solo la parte local, sin @dominio). */
-    const val ROUNDCUBE_USER = "monderas"
+    /** Usuario del login de Roundcube (Hostalia pide el email completo). */
+    const val ROUNDCUBE_USER = "monderas@corrientelebeche.es"
 
     /** Pestaña Drive: abre directamente la app Synology Drive del DSM (cuenta lebeche). */
     const val DRIVE = "https://pelotxo.synology.me:5001/?launchApp=SYNO.SDS.Drive.Application"
