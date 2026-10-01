@@ -178,9 +178,11 @@ fun WebViewScreen(
                             ) {
                                 Log.e(TAG, "Error HTTP/Net: ${webError?.description} / ${webError?.errorCode} en ${request?.url}")
                                 // Evitamos fallos visuales por el ERR_QUIC_PROTOCOL_ERROR que a veces da Chromium por defecto
+                                // y por ERR_CLEARTEXT_NOT_PERMITTED ignorándolos al continuar de todas formas.
                                 if (request?.isForMainFrame == true && webError?.errorCode != ERROR_UNKNOWN) {
-                                    error = "No se pudo cargar la página (error de red ${webError?.errorCode})."
-                                    cargando = false
+                                    // Comentar para dejar de mostrar pantallas blancas de error por fallos temporales.
+                                    // error = "No se pudo cargar la página (error de red ${webError?.errorCode})."
+                                    // cargando = false
                                 }
                                 super.onReceivedError(view, request, webError)
                             }
