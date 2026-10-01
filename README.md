@@ -5,19 +5,19 @@ organizadoras del **Colectivo Lebeche**. Con un único usuario y contraseña, pe
 pestañas separadas:
 
 - **📅 Calendario** — crear/editar/borrar eventos en Synology Calendar (CalDAV, bidireccional).
-- **✉️ Correo** — leer y responder el buzón `monderas@corrientelebeche.es` (IMAP IDLE push; solo en la app Android).
-- **🌐 Web** — acceder al panel STAFF de la web (WebView con auto-login).
-- **☁️ Drive** — acceder y organizar los archivos de la asociación alojados en el NAS.
+- **✉️ Correo** — pantalla nativa con los datos IMAP/SMTP copiables, tutorial paso a paso y botón para abrir la app de correo del móvil (`Intent CATEGORY_APP_EMAIL`).
+- **🌐 Web** — acceder al panel STAFF de la web (WebView con auto-login y botón «Guardar»).
+- **☁️ Drive** — explorador de archivos nativo del NAS (API Synology File Station: listar, navegar, subir y descargar).
 
 ---
 
 ## Estado
 
-**🚧 En desarrollo activo (2026-09-27).** La app **ya se está programando**: dispone de
-**login único** (cuenta compartida `monderas`), las **cuatro pestañas** (calendario, correo, web y drive)
-funcionando, **firma de release** y **CI** que compila y publica el APK firmado en cada push.
+**🚧 En desarrollo activo (2026-10-01).** La app dispone de **login único** (cuenta compartida
+`monderas`), las **cuatro pestañas** (calendario, correo, web y drive), **modo oscuro** con toggle,
+**firma de release** y **CI** que compila y publica el APK firmado en cada push.
 
-- **Último release:** `v3.0.0` (versionCode 23) → https://github.com/jesuscastilla/Monderas-App/releases
+- **Último release:** `v3.1.0` (versionCode 26) → https://github.com/jesuscastilla/Monderas-App/releases
 
 ---
 
@@ -38,10 +38,12 @@ funcionando, **firma de release** y **CI** que compila y publica el APK firmado 
 
 | Componente | Tecnología |
 |---|---|
-| UI | Jetpack Compose + Material 3 |
-| Calendario | OkHttp 4 + biweekly (iCalendar) · CalDAV |
-| Correo | JavaMail (`com.sun.mail`, IMAP IDLE) |
-| Seguridad | Keystore de Android (AES/GCM) + SQLite propia |
+| UI | Jetpack Compose + Material 3 (modo claro/oscuro) |
+| Calendario | OkHttp 5 + biweekly (iCalendar) · CalDAV |
+| Correo | Pantalla nativa (credenciales IMAP/SMTP + `Intent CATEGORY_APP_EMAIL`) |
+| Web (STAFF) | WebView con auto-login por JS |
+| Drive | OkHttp 5 + API Synology File Station (`auth.cgi`/`entry.cgi`) |
+| Seguridad | Keystore de Android (AES/GCM) + SharedPreferences |
 | CI/CD | GitHub Actions (`release.yml`) → APK firmado a GitHub Releases |
 
 ---
