@@ -44,6 +44,7 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sync
+import com.lebeche.monderas.app.ui.components.ThemeToggle
 import androidx.compose.material3.Surface
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -154,6 +155,7 @@ fun MainScreen(
                         }
                     }
                     IconButton(onClick = onOpenSettings) { Icon(Icons.Filled.Settings, "Ajustes") }
+                    ThemeToggle()
                 }
             )
         },

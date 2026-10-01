@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.lebeche.monderas.app.data.SessionManager
 import com.lebeche.monderas.app.drive.DriveItem
 import com.lebeche.monderas.app.drive.DriveRepository
+import com.lebeche.monderas.app.ui.components.ThemeToggle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +72,8 @@ fun DriveScreen() {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver")
                         }
                     }
-                }
+                },
+                actions = { ThemeToggle() }
             )
         }
     ) { padding ->

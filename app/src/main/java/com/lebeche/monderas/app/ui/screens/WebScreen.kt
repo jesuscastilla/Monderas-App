@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.lebeche.monderas.app.data.SessionManager
 import com.lebeche.monderas.app.ui.WebUrls
 import com.lebeche.monderas.app.ui.components.AutoLogin
+import com.lebeche.monderas.app.ui.components.ThemeToggle
 import com.lebeche.monderas.app.ui.components.WebViewScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +28,10 @@ fun WebScreen() {
     
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Panel STAFF") })
+            TopAppBar(
+                title = { Text("Panel STAFF") },
+                actions = { ThemeToggle() }
+            )
         }
     ) { padding ->
         WebViewScreen(

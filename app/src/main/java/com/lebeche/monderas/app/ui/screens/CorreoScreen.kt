@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,10 +27,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +43,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lebeche.monderas.app.data.SessionManager
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import com.lebeche.monderas.app.ui.components.ThemeToggle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,9 +55,15 @@ fun CorreoScreen() {
     val clipboard = LocalClipboardManager.current
     val contrasena = remember { SessionManager.contrasena(context) }
     val usuario = "monderas@corrientelebeche.es"
+    var showTutorial by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Correo") }) }
+        topBar = { 
+            TopAppBar(
+                title = { Text("Correo") },
+                actions = { ThemeToggle() }
+            ) 
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -111,6 +125,13 @@ fun CorreoScreen() {
 
             Spacer(Modifier.weight(1f))
 
+            OutlinedButton(
+                onClick = { showTutorial = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ver tutorial paso a paso", modifier = Modifier.padding(top = 12.dp, bottom = 12.dp))
+            }
+
             Button(
                 onClick = {
                     val intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL)
@@ -127,6 +148,30 @@ fun CorreoScreen() {
                 Icon(Icons.Filled.Email, contentDescription = null)
                 Text("Abrir mi aplicación de Correo", modifier = Modifier.padding(start = 8.dp, top = 12.dp, bottom = 12.dp))
             }
+        }
+        
+        if (showTutorial) {
+            AlertDialog(
+                onDismissRequest = { showTutorial = false },
+                title = { Text("Configurar en Gmail") },
+                text = {
+                    Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("1. Abre Gmail y ve a Ajustes > Añadir cuenta.")
+                        Text("2. Selecciona Otra.")
+                        Text("3. Escribe monderas@corrientelebeche.es y dale a Siguiente.")
+                        Text("4. Elige Personal (IMAP).")
+                        Text("5. Escribe la Contraseña del buzón.")
+                        Text("6. En Servidor de entrada, pon imap.dominioabsoluto.net (puerto 993).")
+                        Text("7. En Servidor de salida, pon smtp.dominioabsoluto.net (puerto 587).")
+                        Text("8. ¡Listo!")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showTutorial = false }) {
+                        Text("Entendido")
+                    }
+                }
+            )
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
@@ -30,7 +31,11 @@ class MainActivity : ComponentActivity() {
         SessionManager.init(this)
         requestInitialPermissions()
         setContent {
-            MonderasTheme {
+            val userDark by SessionManager.isDarkMode.collectAsState()
+            val systemDark = isSystemInDarkTheme()
+            val darkTheme = userDark ?: systemDark
+
+            MonderasTheme(darkTheme = darkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

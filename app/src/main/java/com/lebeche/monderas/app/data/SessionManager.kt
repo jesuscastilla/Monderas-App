@@ -25,8 +25,16 @@ object SessionManager {
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
+    // true = Dark, false = Light, null = System
+    private val _isDarkMode = MutableStateFlow<Boolean?>(null)
+    val isDarkMode: StateFlow<Boolean?> = _isDarkMode
+
     fun init(context: Context) {
-        _isLoggedIn.value = prefs(context).getBoolean(KEY_LOGGED_IN, false)
+        val p = prefs(context)
+        _isLoggedIn.value = p.getBoolean(KEY_LOGGED_IN, false)
+        if (p.contains("dark_mode")) {
+            _isDarkMode.value = p.getBoolean("dark_mode", false)
+        }
     }
 
     fun login(context: Context, usuario: String, contrasena: String): Boolean {
@@ -49,6 +57,14 @@ object SessionManager {
     fun contrasena(context: Context): String {
         val enc = prefs(context).getString(KEY_PASS_ENC, "").orEmpty()
         return if (enc.isEmpty()) "" else Crypto.decrypt(enc)
+    }
+
+    fun setDarkMode(context: Context, dark: Boolean?) {
+        _isDarkMode.value = dark
+        prefs(context).edit {
+            if (dark == null) remove("dark_mode")
+            else putBoolean("dark_mode", dark)
+        }
     }
 
     private fun prefs(context: Context): SharedPreferences =
