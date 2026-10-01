@@ -10,9 +10,13 @@ import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.FormBody
 import okhttp3.HttpUrl
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONObject
+import java.io.InputStream
+import java.io.OutputStream
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
@@ -111,5 +115,56 @@ class DriveRepository {
             Log.e("DriveRepository", "List error", e)
         }
         return@withContext list.sortedWith(compareBy({ !it.isDir }, { it.name }))
+    }
+
+    suspend fun downloadFile(path: String, outputStream: OutputStream): Boolean = withContext(Dispatchers.IO) {
+        if (sid == null) return@withContext false
+        try {
+            val url = "${baseUrl}entry.cgi?api=SYNO.FileStation.Download&version=2&method=download&path=${Uri.encode(path)}&sid=$sid"
+            val request = Request.Builder().url(url).build()
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                response.body?.byteStream()?.use { input ->
+                    outputStream.use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                return@withContext true
+            }
+        } catch (e: Exception) {
+            Log.e("DriveRepository", "Download error", e)
+        }
+        return@withContext false
+    }
+
+    suspend fun uploadFile(destPath: String, fileName: String, inputStream: InputStream): Boolean = withContext(Dispatchers.IO) {
+        if (sid == null) return@withContext false
+        try {
+            val url = "${baseUrl}entry.cgi"
+            val bytes = inputStream.readBytes()
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("api", "SYNO.FileStation.Upload")
+                .addFormDataPart("version", "2")
+                .addFormDataPart("method", "upload")
+                .addFormDataPart("path", destPath)
+                .addFormDataPart("create_parents", "true")
+                .addFormDataPart("overwrite", "true")
+                .addFormDataPart("file", fileName, RequestBody.create(null, bytes))
+                .build()
+
+            val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: return@withContext false
+            val json = JSONObject(body)
+            return@withContext json.optBoolean("success", false)
+        } catch (e: Exception) {
+            Log.e("DriveRepository", "Upload error", e)
+            false
+        }
     }
 }
