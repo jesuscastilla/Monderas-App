@@ -3,11 +3,9 @@ package com.lebeche.monderas.app.ui.components
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.net.http.SslError
 import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.RenderProcessGoneDetail
-import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -161,16 +159,6 @@ fun WebViewScreen(
                                 return false
                             }
 
-                            @SuppressLint("WebViewClientOnReceivedSslError")
-                            override fun onReceivedSslError(
-                                view: WebView?,
-                                handler: SslErrorHandler?,
-                                error: SslError?
-                            ) {
-                                // Siempre procedemos porque nuestras URLs internas tienen Cloudflare Origin o son autofirmados
-                                handler?.proceed()
-                            }
-                        
                             override fun onReceivedError(
                                 view: WebView?,
                                 request: WebResourceRequest?,
