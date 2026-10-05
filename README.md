@@ -8,6 +8,7 @@ pestañas separadas:
 - **✉️ Correo** — pantalla nativa con los datos IMAP/SMTP copiables, tutorial paso a paso y botón para abrir la app de correo del móvil (`Intent CATEGORY_APP_EMAIL`).
 - **🌐 Web** — acceder al panel STAFF de la web (WebView con auto-login y botón «Guardar»).
 - **☁️ Drive** — explorador de archivos nativo del NAS (API Synology File Station: listar, navegar, subir y descargar).
+- **🔔 Alertas** — Notificaciones Push en tiempo real gracias a Firebase Cloud Messaging (FCM).
 
 ---
 
@@ -43,8 +44,9 @@ pestañas separadas:
 | Correo | Pantalla nativa (credenciales IMAP/SMTP + `Intent CATEGORY_APP_EMAIL`) |
 | Web (STAFF) | WebView con auto-login por JS |
 | Drive | OkHttp 5 + API Synology File Station (`auth.cgi`/`entry.cgi`) |
+| Push | Firebase Cloud Messaging (FCM) para notificaciones |
 | Seguridad | Keystore de Android (AES/GCM) + SharedPreferences |
-| CI/CD | GitHub Actions (`release.yml`) → APK firmado a GitHub Releases |
+| CI/CD | GitHub Actions (`release.yml`) → APK/AAB firmado a GitHub Releases |
 
 ---
 

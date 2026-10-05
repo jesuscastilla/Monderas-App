@@ -18,3 +18,6 @@ app/build/
 *.cer
 *.key
 *.jks
+
+# Secretos y configuración de Google Services
+google-services.json
